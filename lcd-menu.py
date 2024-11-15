@@ -38,11 +38,14 @@ def show_version():
     lcd.write(0, [sys_name, sys_vers])
 
 def show_uptime():
-    uptime = shell('uptime').split(',')
-    up = ' '.join(uptime[0].split()[2:]) + ' ' + uptime[1]
-    load = os.getloadavg()
+    #  21:16:52 up  3:09,  5 users,  load average: 1.33, 1.52, 1.58
+    [uptime, users, load_avg] = map(str.strip, shell('uptime').split(',', 2))
+    [ts, _, up] = [x for x in map(str.strip, uptime.split(' ')) if x]
+    
+    [load, avg, _l1, _l5, _l15] = load_avg.split(' ')
+
     lcd.clear()
-    lcd.write(0, [f'Up  : {up}', f'Load: {load[0]} {load[1]}, {load[2]}'])
+    lcd.write(0, [f'Up {up}, {users}', f'{_l1} {_l5} {_l15}'])
 
 ip_addresses = []
 def add_ips_to_menu():
