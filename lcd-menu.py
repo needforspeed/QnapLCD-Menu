@@ -37,13 +37,6 @@ def show_version():
     lcd.clear()
     lcd.write(0, [sys_name, sys_vers])
 
-def show_truenas():
-    truenas = shell('cli -c \'system version\'')
-    truenas = truenas.split('-')
-
-    lcd.clear()
-    lcd.write(0, ['-'.join(truenas[:-1]), truenas[-1]])
-
 def show_uptime():
     uptime = shell('uptime').split(',')
     up = ' '.join(uptime[0].split()[2:]) + ' ' + uptime[1]
@@ -94,39 +87,11 @@ def show_ip():
     lcd.clear()
     lcd.write(0, [f'{ip_addresses[ip_index][0]}', f'{ip_addresses[ip_index][1]}'])
 
-zfs_pools = []
-def add_zpools_to_menu():
-    pools = shell('zpool list').split('\n')
-
-    zfs_pools.clear()
-    for pool in pools[1:]:
-        zfs_pools.append(pool.split())
-
-    # remove existing zfs pool menu items
-    while show_zpool in menu:
-        menu.remove(show_zpool)
-
-    # add zfs pool menu items for discovered pools
-    for _ in zfs_pools:
-        menu.append(show_zpool)
-
-def show_zpool():
-    pool_index = 0
-    for index in range(menu_item):
-        if menu[index] == show_zpool:
-            pool_index += 1
-
-    pool = zfs_pools[pool_index]
-
-    lcd.clear()
-    lcd.write(0, [f'{pool[0]} ({pool[7]})', f'{pool[2]} of {pool[1]}'])
-    
 #
 # Menu
 #
 menu_item = 0
 menu = [
-    show_truenas,
     show_version,
     show_uptime
 ]
@@ -161,7 +126,6 @@ def main():
     quit = False
     while not quit:
         add_ips_to_menu()
-        add_zpools_to_menu()
         menu[menu_item]()
 
         print('sleep...')
