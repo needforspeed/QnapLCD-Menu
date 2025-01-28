@@ -25,14 +25,12 @@ To install, clone this repository onto your NAS somewhere that is accessible to 
 To communicate with the display, *pyserial* is required. If you are able to install it with `pip`, that's wonderful, do that!
 
 ```
-pip3 install pyserial
+python3 -m venv venv
+. ./venv/bin/activate
+pip install -r requirements.txt
+./clear-and-turn-off-backlight.py
 ```
 
-If you are not able to (TrueNAS SCALE), you can use the included `setup.sh` script to install it into the current directory. In the *same directory* as `qnaplcd` (e.g. the root of this project)
-
-```
-./setup.sh
-```
 
 # Using
 
